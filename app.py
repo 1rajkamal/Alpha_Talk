@@ -151,7 +151,7 @@ def generate_bot_reply(message, username=None) -> str:
         return " Danish bhaiii !!! Kyaaa Sirrrr (chatttt chattt)"
 
     if "tell me about abhay" in msg:
-        return "sutta dealer"
+        return "student At aditya Engineering College"
 
     if "tell me about piyush" in msg:
         return "Piyush bhaiii !!! bhaii mera toh aakh fadak raha h"
