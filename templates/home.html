@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Alpha Talk</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Lottie for animated bot -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body>
+    <!-- background glows -->
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
+    <div class="bg-glow g3"></div>
+
+    <div class="home-box">
+        <div class="home-header">
+            <div class="home-title-block">
+                <h2>Alpha Talk</h2>
+                <p>Your friendly neon AI assistant.</p>
+            </div>
+
+            <div class="header-right">
+                <!-- Dark / light theme toggle -->
+                <button id="theme-toggle" class="theme-toggle">
+                    <span id="theme-icon">🌙</span>
+                    <span id="theme-text">Dark</span>
+                </button>
+                <a class="logout-link" href="/logout">Logout</a>
+            </div>
+        </div>
+
+        <p class="greeting">
+            Hi <strong id="display-name">{{ username }}</strong> 👋
+        </p>
+        <p class="phone-info">
+            Logged in with phone: <strong>{{ phone }}</strong>
+        </p>
+
+        <!-- COLOR THEME PICKER -->
+        <div class="theme-pills">
+            <div class="theme-pill" data-color="blue">
+                <div class="theme-pill-dot"></div>
+                Default
+            </div>
+            <div class="theme-pill" data-color="green">
+                <div class="theme-pill-dot"></div>
+                Green
+            </div>
+            <div class="theme-pill" data-color="purple">
+                <div class="theme-pill-dot"></div>
+                Purple
+            </div>
+            <div class="theme-pill" data-color="sunset">
+                <div class="theme-pill-dot"></div>
+                Sunset
+            </div>
+        </div>
+
+        <!-- PROFILE PANEL -->
+        <div class="profile-panel">
+            <div class="profile-main">
+                <div class="profile-avatar-circle" id="profile-avatar">😎</div>
+                <div>
+                    <div class="profile-meta-title" id="profile-name-text">{{ username }}</div>
+                    <div class="profile-meta-sub" id="profile-bio-text">
+                        Let’s personalize your Alpha Talk profile 🌈
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-edit">
+                <div class="profile-field">
+                    <label>Display name</label>
+                    <input id="profile-name-input" type="text" placeholder="e.g., Raj Kamal">
+                </div>
+                <div class="profile-field">
+                    <label>Avatar emoji</label>
+                    <input id="profile-emoji-input" type="text" placeholder="😎, 🤖, 🐼, 💻 etc">
+                </div>
+                <div class="profile-field">
+                    <label>Short bio</label>
+                    <input id="profile-bio-input" type="text" placeholder="e.g., CSE student who loves AI">
+                </div>
+
+                <button type="button" id="save-profile-btn" class="profile-save-btn">
+                    Save profile
+                </button>
+            </div>
+        </div>
+
+        <!-- CHAT AREA -->
+        <div class="chat-shell">
+            <div class="chat-header">
+                <div class="bot-meta">
+                    <div class="bot-badge">🤖</div>
+                    <div>
+                        <div class="bot-text-title">Alpha Talk Bot</div>
+                        <div class="bot-text-sub">Ask me about code, exams, ideas or anything!</div>
+                    </div>
+                </div>
+                <div class="bot-anim">
+                    <lottie-player
+                        src="https://assets1.lottiefiles.com/private_files/lf30_t26law.json"
+                        background="transparent"
+                        speed="1"
+                        loop
+                        autoplay>
+                    </lottie-player>
+                </div>
+            </div>
+
+            <div id="messages" class="message-area">
+                <div class="message bot" id="welcome-message">
+                    Hi <strong id="welcome-name">{{ username }}</strong> 👋<br>
+                    I'm <strong>Alpha Talk</strong>. How can I help you today?
+                </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div id="typing-indicator" class="message bot typing hidden">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
+
+            <form id="chat-form" class="chat-input-row">
+                <input
+                    type="text"
+                    id="user-input"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============= BASIC ELEMENTS =============
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('user-input');
+        const messagesDiv = document.getElementById('messages');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        const themePills = document.querySelectorAll('.theme-pill');
+
+        const currentPhone = "{{ phone }}";
+
+        // Profile elements
+        const displayNameSpan = document.getElementById('display-name');
+        const welcomeNameSpan = document.getElementById('welcome-name');
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileNameText = document.getElementById('profile-name-text');
+        const profileBioText = document.getElementById('profile-bio-text');
+        const profileNameInput = document.getElementById('profile-name-input');
+        const profileEmojiInput = document.getElementById('profile-emoji-input');
+        const profileBioInput = document.getElementById('profile-bio-input');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+
+        // ============= DARK / LIGHT THEME =============
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                document.body.classList.remove('light-mode');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+        }
+
+        const savedTheme = localStorage.getItem('alpha_theme') || 'dark';
+        applyTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+            localStorage.setItem('alpha_theme', next);
+        });
+
+        // ============= COLOR THEME (blue/green/purple/sunset) =============
+        function applyColorTheme(name) {
+            document.body.classList.remove('theme-blue', 'theme-green', 'theme-purple', 'theme-sunset');
+            if (name !== 'blue') {
+                document.body.classList.add('theme-' + name);
+            }
+
+            themePills.forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.color === name);
+            });
+        }
+
+        const savedColor = localStorage.getItem('alpha_color_theme') || 'blue';
+        applyColorTheme(savedColor);
+
+        themePills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                const color = pill.dataset.color;
+                applyColorTheme(color);
+                localStorage.setItem('alpha_color_theme', color);
+            });
+        });
+
+        // ============= PROFILE (per phone) =============
+        const NAME_KEY  = 'alpha_profile_name_'  + currentPhone;
+        const EMOJI_KEY = 'alpha_profile_emoji_' + currentPhone;
+        const BIO_KEY   = 'alpha_profile_bio_'   + currentPhone;
+
+        function loadProfileFromStorage() {
+            const storedName  = localStorage.getItem(NAME_KEY);
+            const storedEmoji = localStorage.getItem(EMOJI_KEY);
+            const storedBio   = localStorage.getItem(BIO_KEY);
+
+            if (storedName) {
+                displayNameSpan.textContent = storedName;
+                welcomeNameSpan.textContent = storedName;
+                profileNameText.textContent = storedName;
+                profileNameInput.value = storedName;
+            }
+
+            if (storedEmoji) {
+                profileAvatar.textContent = storedEmoji;
+                profileEmojiInput.value = storedEmoji;
+            }
+
+            if (storedBio) {
+                profileBioText.textContent = storedBio;
+                profileBioInput.value = storedBio;
+            }
+        }
+
+        loadProfileFromStorage();
+
+        saveProfileBtn.addEventListener('click', () => {
+            const newName  = profileNameInput.value.trim();
+            const newEmoji = profileEmojiInput.value.trim();
+            const newBio   = profileBioInput.value.trim();
+
+            if (newName) {
+                localStorage.setItem(NAME_KEY, newName);
+                displayNameSpan.textContent = newName;
+                welcomeNameSpan.textContent = newName;
+                profileNameText.textContent = newName;
+            }
+
+            if (newEmoji) {
+                localStorage.setItem(EMOJI_KEY, newEmoji);
+                profileAvatar.textContent = newEmoji;
+            }
+
+            if (newBio) {
+                localStorage.setItem(BIO_KEY, newBio);
+                profileBioText.textContent = newBio;
+            }
+
+            saveProfileBtn.textContent = 'Saved ✔';
+            setTimeout(() => {
+                saveProfileBtn.textContent = 'Save profile';
+            }, 1200);
+        });
+
+        // ============= CHAT (calls /chat on backend) =============
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.classList.add('message', sender);
+            div.textContent = text;
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showTyping() {
+            typingIndicator.classList.remove('hidden');
+        }
+
+        function hideTyping() {
+            typingIndicator.classList.add('hidden');
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (!text) return;
+
+            // show user message
+            addMessage(text, 'user');
+            input.value = '';
+
+            // show typing indicator
+            showTyping();
+
+            try {
+                const res = await fetch("/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await res.json();
+                hideTyping();
+                addMessage(data.reply || "Sorry, I couldn't understand that.", "bot");
+            } catch (err) {
+                console.error(err);
+                hideTyping();
+                addMessage("Oops, something went wrong talking to the server 😢", "bot");
+            }
+        });
+    </script>
+</body>
+</html>
