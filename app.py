@@ -133,8 +133,12 @@ def generate_bot_reply(message, username=None) -> str:
     # "tell me about rajkamal", "Tell me about Rajkamal", "WHO IS RAJ KAMAL?"
     if "rajkamal" in msg or "raj kamal" in msg:
         return (
-            "Rajkamal is a CSE (Data Science) student and the founder & CEO "
-            "of the Alpha Talk website 👑"
+            "Rajkamal — CSE (Data Science) student,"
+"Founder & CEO of Alpha Talk 🚀,"
+"Creative thinker, passionate learner,"
+"Loves AI, coding & building futuristic products."
+"A true leader with big dreams. 👑"
+
         )
 
     # you can edit these yourself later (placeholders for now):
@@ -145,7 +149,7 @@ def generate_bot_reply(message, username=None) -> str:
         return "No need to introduce Vishnu just ask anyone who is biryani boy ?? they will tell you about Vishnu"
 
     if "tell me about akshat" in msg:
-        return "you mean malla lover akshat ?/😂"
+        return "you mean keshri akshat ?/😂"
 
     if "tell me about danish" in msg:
         return " Danish bhaiii !!! Kyaaa Sirrrr (chatttt chattt)"
@@ -154,7 +158,7 @@ def generate_bot_reply(message, username=None) -> str:
         return "student At aditya Engineering College"
 
     if "tell me about piyush" in msg:
-        return "Piyush bhaiii !!! bhaii mera toh aakh fadak raha h"
+        return " student At aditya Engineering College Piyush bhaiii !!! bhaii mera toh aakh fadak raha h"
 
     if "tell me about saudi" in msg:
         return "areeeeeeeeeeee madharch00d (exam time 9 se 10 ka bicch sab room m raid marne wala Saudi) chutt boy srry cute boy.."
