@@ -143,7 +143,7 @@ def generate_bot_reply(message, username=None) -> str:
 
     # you can edit these yourself later (placeholders for now):
     if "tell me about karthik" in msg:
-        return "karthik bhaii ke bare me kya he btauu  bsss ,karthik lover boy Student of AIML (kieeeeeeee)"
+        return "Karthik is an AIML student at Aditya University, a talented coder from Odisha, known for his dedication, sharp mind, and calm personality. 🚀"
 
     if "tell me about vishnu" in msg:
         return "No need to introduce Vishnu just ask anyone who is biryani boy ?? they will tell you about Vishnu"
@@ -180,7 +180,8 @@ def generate_bot_reply(message, username=None) -> str:
 
     if "tell me about rahul" in msg:
         return " rahul bhaiya ke bare me kya he bolu bss bolunga bhaiya jii aap he movie dekhiye bawallllll h ekdam"
-
+    if "tell me about arvind" in msg:
+        return"Arvind is an AIML student from Kolkata, a good boy with a sharp mind, excellent coding skills, and a strong dedication to learning. 🚀"
     # ===== GENERAL REPLIES =====
     if any(x in msg for x in ["hello", "hi", "hey", "hii"]):
         return f"Hi {name_part}! 👋 How can I help you today?"
